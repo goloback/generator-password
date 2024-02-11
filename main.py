@@ -1,5 +1,5 @@
 from random import randint, choice
-
+# idea of program
 class Generate_password():
     def __init__(self):
         self.password = ''
