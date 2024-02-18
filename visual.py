@@ -33,8 +33,7 @@ def copy_password(event):
     canvas.itemconfigure(copy, image=copyimg)
 
 global click_tick, change_tick, click_options, create_options
-error_text = None
-date_information = Date_information(error_text)
+
 
 def click_tick(main_canva, tick, value):
     global numbers_tick, letters_tick, LETTERS_tick, sympols_tick
@@ -55,6 +54,7 @@ def change_tick(main_canva, tick, value):
     if value == True:
         main_canva.itemconfigure(tick, image=tick_green)
         create_options()
+        date_information.delete_error()
     else:
         main_canva.itemconfigure(tick, image=tick_white)
         destroy_option()
@@ -109,7 +109,6 @@ def destroy_option():
         plus_sympols = None
 
 def validation_len_password(try_number):
-    global error_text
     if is_options == True and len(try_number) == 0:
         return True
     if is_options == True:
@@ -120,10 +119,10 @@ def validation_len_password(try_number):
         return False
     if try_number == '0':
         return False
-    if  try_number.isdigit():
-        if error_text is not None:
-            error_text.destroy()
-            error_text = None
+    if try_number.isdigit():
+        if date_information.error_text is not None:
+            date_information.error_text.destroy()
+            date_information.error_text = None
         return True
 
 def validation_entry_password(try_anything):
@@ -145,13 +144,12 @@ def click_generate_password():
     if correct_form == True:
         generate_password()
     else:
-        if error_text is None:
-            error_text = Label(canvas, text='write correct password length', bg='#9f6fde', fg='red', font=('Comic Sans MS', 15))
-            error_text.place(x=400, y=300)
-            date_information.error_message = error_text
+        if date_information.error_text is None:
+            date_information.error_text = Label(canvas, text='write correct password length', bg='#9f6fde', fg='red', font=('Comic Sans MS', 15))
+            date_information.error_text.place(x=400, y=300)
         else:
-            error_text['text']='write correct password length'
-            error_text.place(x=400, y=300)
+            date_information.error_text['text']='write correct password length'
+            date_information.error_text.place(x=400, y=300)
 
 def generate_password():
     global disable
@@ -187,6 +185,9 @@ def generate_password():
             password.sympol_amount = int(plus_sympols.entry.get())
         else:
             password.sympol_amount = 0
+    if len(types) == 0:
+        date_information.create_error()
+        return
     if is_options == False:
         if len(types) == 1:
             password.generator_only_one_type_password(types[0])
@@ -222,6 +223,7 @@ registered_validation_len_password = window.register(validation_len_password)
 registered_validation_entry_password = window.register(validation_entry_password)
 canvas = Canvas(window, width=700, height=400, bg='#9f6fde')
 canvas.pack()
+date_information = Date_information(canvas)
 copyimg = PhotoImage(file='copy.png')
 copy_click_img = PhotoImage(file='click_copy.png')
 copy = canvas.create_image(550, 100, anchor=NW, image=copyimg)

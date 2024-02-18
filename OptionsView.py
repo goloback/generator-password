@@ -40,7 +40,7 @@ class optionsView():
             self.set_value(int(try_number))
             if self.date_information.get_sum()<100:
                 self.date_information.print_information()
-#                self.date_information.delete_error()
+                self.date_information.delete_error()
                 return True
             else:
                 if self.type_value == 'numbers':
